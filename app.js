@@ -4,7 +4,7 @@ const products=[
 {id:29,n:'Menace Cape',c:'Capes',p:0.40,t:'Minecraft Menace Cape',note:true,img:'public/images/menacecape.png'},
 {id:30,n:'Purple Heart Cape',c:'Capes',p:3.10,t:'Minecraft Purple Heart Cape',note:true,f:1,img:'public/images/purpleheartcape.png'},
 {id:31,n:'Optifine Cape',c:'Capes',p:0.40,t:'Minecraft Optifine Cape',note:true,img:'public/images/optifinecape.webp'},
-{id:24,n:'Minecraft Game Pass',c:'Games',p:7.90,t:'MCFA Access',note:true,img:'public/images/mcfa.webp'},
+{id:24,n:'Minecraft Full Access Account',c:'Games',p:7.90,t:'MCFA Access',note:true,img:'public/images/mcfa.webp'},
 {id:25,n:'Minecraft Legends',c:'Games',p:1.70,t:'Minecraft Legends',note:true,img:'public/images/mclegends.jpg'},
 {id:26,n:'Minecraft Dungeons',c:'Games',p:11.50,t:'Minecraft Dungeons Game',note:true,img:'public/images/mcdungeons.jpg'},
 {id:1,n:'NethPVP Kit',c:'2b2t Gear',p:1.35,t:'2B2T Netherite PVP Kit',note:true,img:'public/images/nethpvpkit.png'},
