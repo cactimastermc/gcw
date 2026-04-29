@@ -29,7 +29,7 @@ html, body {
 body {
   font: 14px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   color: var(--text);
-  background: linear-gradient(180deg, #48288c 0, #6b3d9f 50%, #db7f4b 100%);
+  background: linear-gradient(180deg, #db7f4b 0, #6b3d9f 50%, #48288c 100%);
   overflow-x: hidden;
 }
 
