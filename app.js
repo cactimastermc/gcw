@@ -1,4 +1,12 @@
 const products=[
+{id:27,n:'Copper Cape',c:'Capes',p:0.15,t:'Minecraft Copper Cape',note:true,img:'public/images/coppercape.png'},
+{id:28,n:'Home Cape',c:'Capes',p:0.20,t:'Minecraft Home Cape',note:true,img:'public/images/homecape.png'},
+{id:29,n:'Menace Cape',c:'Capes',p:0.40,t:'Minecraft Menace Cape',note:true,img:'public/images/menacecape.png'},
+{id:30,n:'Purple Heart Cape',c:'Capes',p:3.10,t:'Minecraft Purple Heart Cape',note:true,f:1,img:'public/images/purpleheartcape.png'},
+{id:31,n:'Optifine Cape',c:'Capes',p:0.40,t:'Minecraft Optifine Cape',note:true,img:'public/images/optifinecape.webp'},
+{id:24,n:'Minecraft Game Pass',c:'Games',p:7.90,t:'MCFA Access',note:true,img:'public/images/mcfa.webp'},
+{id:25,n:'Minecraft Legends',c:'Games',p:1.70,t:'Minecraft Legends',note:true,img:'public/images/mclegends.jpg'},
+{id:26,n:'Minecraft Dungeons',c:'Games',p:11.50,t:'Minecraft Dungeons Game',note:true,img:'public/images/mcdungeons.jpg'},
 {id:1,n:'NethPVP Kit',c:'2b2t Gear',p:1.35,t:'2B2T Netherite PVP Kit',note:true,img:'public/images/nethpvpkit.png'},
 {id:2,n:'DiaPVP Kit',c:'2b2t Gear',p:1,t:'2B2T Diamond PVP Kit',note:true,img:'public/images/diapvpkit.png'},
 {id:3,n:'Crystal Kit',c:'2b2t Gear',p:1.35,t:'2B2T Crystal PVP Kit',note:true,img:'public/images/crystpvpkit.png'},
@@ -21,15 +29,7 @@ const products=[
 {id:20,n:'Crunchyroll 1m',c:'Entertainment',p:0.60,t:'Crunchyroll 1 Month',note:true,img:'public/images/crunchyroll.png'},
 {id:21,n:'Amazon Prime 1m',c:'Entertainment',p:1.00,t:'Amazon Prime 1 Month',note:true,img:'public/images/prime1m.png'},
 {id:22,n:'Amazon Prime 6m',c:'Entertainment',p:2.00,t:'Amazon Prime 6 Months',note:true,img:'public/images/prime6m.png'},
-{id:23,n:'JioHotstar Super',c:'Entertainment',p:0.99,t:'JioHotstar Super Access',note:true,img:'public/images/jiohotstar.png'},
-{id:24,n:'Minecraft Game Pass',c:'Games',p:7.90,t:'MCFA Access',note:true,img:'public/images/mcfa.webp'},
-{id:25,n:'Minecraft Legends',c:'Games',p:1.70,t:'Minecraft Legends',note:true,img:'public/images/mclegends.jpg'},
-{id:26,n:'Minecraft Dungeons',c:'Games',p:11.50,t:'Minecraft Dungeons Game',note:true,img:'public/images/mcdungeons.jpg'},
-{id:27,n:'Copper Cape',c:'Capes',p:0.15,t:'Minecraft Copper Cape',note:true,img:'public/images/coppercape.png'},
-{id:28,n:'Home Cape',c:'Capes',p:0.20,t:'Minecraft Home Cape',note:true,img:'public/images/homecape.png'},
-{id:29,n:'Menace Cape',c:'Capes',p:0.40,t:'Minecraft Menace Cape',note:true,img:'public/images/menacecape.png'},
-{id:30,n:'Purple Heart Cape',c:'Capes',p:3.10,t:'Minecraft Purple Heart Cape',note:true,f:1,img:'public/images/purpleheartcape.png'},
-{id:31,n:'Optifine Cape',c:'Capes',p:0.40,t:'Minecraft Optifine Cape',note:true,img:'public/images/optifinecape.webp'}
+{id:23,n:'JioHotstar Super',c:'Entertainment',p:0.99,t:'JioHotstar Super Access',note:true,img:'public/images/jiohotstar.png'}
 ];
 const page=document.body.dataset.page;
 const cart=JSON.parse(localStorage.getItem('cart')||'[]');
