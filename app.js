@@ -27,8 +27,8 @@ const products=[
 {id:18,n:'Premium 24/7 Server',c:'Hosting',p:2.50,t:'Premium Minecraft Server',note:true,img:'public/images/premiumserver.png'},
 {id:19,n:'YouTube Premium',c:'Entertainment',p:0.40,t:'YouTube Premium Access',note:true,img:'public/images/ytpremium.png'},
 {id:20,n:'Crunchyroll 1m',c:'Entertainment',p:0.60,t:'Crunchyroll 1 Month',note:true,img:'public/images/crunchyroll.png'},
-{id:21,n:'Amazon Prime 1m',c:'Entertainment',p:1.00,t:'Amazon Prime 1 Month',note:true,img:'public/images/prime1m.png'},
-{id:22,n:'Amazon Prime 6m',c:'Entertainment',p:2.00,t:'Amazon Prime 6 Months',note:true,img:'public/images/prime6m.png'},
+{id:21,n:'Amazon Prime 1m',c:'Entertainment',p:1.00,t:'Amazon Prime 1 Month',note:true,img:'public/images/amazonprime.webp'},
+{id:22,n:'Amazon Prime 6m',c:'Entertainment',p:2.00,t:'Amazon Prime 6 Months',note:true,img:'public/images/amazonprime.webp'},
 {id:23,n:'JioHotstar Super',c:'Entertainment',p:0.99,t:'JioHotstar Super Access',note:true,img:'public/images/jiohotstar.png'}
 ];
 const page=document.body.dataset.page;

@@ -29,7 +29,11 @@ html, body {
 body {
   font: 14px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   color: var(--text);
-  background: linear-gradient(180deg, #db7f4b 0, #6b3d9f 50%, #48288c 100%);
+  background: radial-gradient(circle at 10% 10%, rgba(255, 168, 93, 0.22), transparent 22%),
+              radial-gradient(circle at 95% 18%, rgba(106, 43, 181, 0.22), transparent 20%),
+              linear-gradient(180deg, #341d4d 0%, #5f3c95 35%, #512b78 55%, #2d1632 100%);
+  background-attachment: fixed;
+  background-size: cover;
   overflow-x: hidden;
 }
 
@@ -306,8 +310,8 @@ input {
 }
 
 .footer {
-  background: var(--brown-mid);
-  border-top: 1px solid var(--line);
+  background: transparent;
+  border-top: 1px solid rgba(255,255,255,0.08);
   margin-top: 32px;
   padding: 28px 0 14px;
 }
