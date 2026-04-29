@@ -29,11 +29,20 @@ html, body {
 body {
   font: 14px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   color: var(--text);
-  background: radial-gradient(circle at 10% 10%, rgba(255, 168, 93, 0.22), transparent 22%),
-              radial-gradient(circle at 95% 18%, rgba(106, 43, 181, 0.22), transparent 20%),
-              linear-gradient(180deg, #341d4d 0%, #5f3c95 35%, #512b78 55%, #2d1632 100%);
+  position: relative;
+  background-image:
+    radial-gradient(circle at 20% 15%, rgba(255, 206, 153, 0.28), transparent 20%),
+    radial-gradient(circle at 80% 18%, rgba(255, 170, 95, 0.22), transparent 14%),
+    radial-gradient(circle at 50% 90%, rgba(255, 190, 115, 0.16), transparent 18%),
+    radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.95) 1px, transparent 1px),
+    radial-gradient(circle, rgba(255,255,255,0.82) 0%, rgba(255,255,255,0.82) 1px, transparent 1px),
+    radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.9) 1px, transparent 1px),
+    radial-gradient(circle, rgba(255,255,255,0.78) 0%, rgba(255,255,255,0.78) 1px, transparent 1px),
+    linear-gradient(180deg, #2c0c57 0%, #6a2c9d 30%, #be5fa4 55%, #eb8554 82%, #ffc577 100%);
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat, repeat, repeat, no-repeat;
+  background-size: auto, auto, auto, 140px 140px, 80px 80px, 180px 180px, 120px 120px, cover;
+  background-position: center center, center center, center center, 5% 12%, 55% 18%, 80% 42%, 30% 70%, center center;
   background-attachment: fixed;
-  background-size: cover;
   overflow-x: hidden;
 }
 
@@ -310,10 +319,10 @@ input {
 }
 
 .footer {
-  background: transparent;
-  border-top: 1px solid rgba(255,255,255,0.08);
+  background: var(--card);
+  border-top: 1px solid var(--line);
   margin-top: 32px;
-  padding: 28px 0 14px;
+  padding: 28px 0 18px;
 }
 
 .footer-content {
@@ -354,7 +363,9 @@ input {
   width: min(1400px, calc(100% - 32px));
   margin: 0 auto;
   padding-top: 14px;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  justify-content: center;
   text-align: center;
   color: var(--muted);
   font-size: 12px;
@@ -372,7 +383,7 @@ input {
   }
 
   .top {
-    align-items: flex-start;
+    align-items: center;
     flex-direction: column;
     padding: 18px 0 10px;
   }
