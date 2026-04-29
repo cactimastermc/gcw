@@ -15,7 +15,7 @@ const products=[
 {id:6,n:'Parched Hoodie',c:'Cosmetics',p:0.15,t:'Parched Hoodie Cosmetic',note:true,img:'public/images/parchedhoodie.png'},
 {id:7,n:'Happy Ghast Pilot',c:'Cosmetics',p:2.50,t:'Happy Ghast Pilot Cosmetic',note:true,f:1,img:'public/images/happyghastpilot.png'},
 {id:8,n:'Mask of the Watcher',c:'Cosmetics',p:2.25,t:'Mask of the Watcher Cosmetic',note:true,img:'public/images/maskofthewatcher.png'},
-{id:9,n:'Allay Hoodie',c:'Cosmetics',p:1.30,t:'Allay Hoodie Cosmetic',note:true,img:'public/images/allayhoodie.png'},
+{id:9,n:'Allay Hoodie',c:'Cosmetics',p:1.30,t:'Allay Hoodie Cosmetic',note:true,img:'public/images/allayhoodie.webp'},
 {id:10,n:'Focus Retention Helmet',c:'Cosmetics',p:1.30,t:'Focus Retention Helmet Cosmetic',note:true,img:'public/images/focusretentionhelmet.png'},
 {id:11,n:'Grimace Head',c:'Cosmetics',p:6.50,t:'Grimace Head Cosmetic',note:true,f:1,img:'public/images/grimacehead.png'},
 {id:12,n:'Fry Helmet',c:'Cosmetics',p:6.50,t:'Fry Helmet Cosmetic',note:true,img:'public/images/fryhelmet.png'},
@@ -39,9 +39,17 @@ const money=n=>'$'+n.toFixed(2);
 const save=()=>localStorage.setItem('cart',JSON.stringify(cart));
 const total=()=>cart.reduce((a,i)=>a+i.p*i.q,0);
 const count=()=>cart.reduce((a,i)=>a+i.q,0);
-const cats=['All',...new Set(products.map(p=>p.c))];
+const categoryPriority={Capes:0,Games:1,Ranks:2,Hosting:3,Entertainment:99};
+const cats=['All',...Array.from(new Set(products.map(p=>p.c))).sort((a,b)=>{const pa=categoryPriority[a]??99;const pb=categoryPriority[b]??99;return pa!==pb?pa-pb:a.localeCompare(b);})];
 const qtyState=Object.fromEntries(products.map(p=>[p.id,1]));
 const setCount=()=>{const el=document.querySelector('#cartCount');if(el)el.textContent=count();};
+const initBackgroundDots=()=>{const count=500;const container=document.createElement('div');container.id='bgDots';document.body.append(container);const dots=[];for(let i=0;i<count;i++){const dot=document.createElement('div');dot.className='bg-dot';const x=Math.random()*100;const y=Math.random()*100;const size=1.5+Math.random()*3;dot.dataset.x=x;dot.dataset.y=y;dot._homeX=x;dot._homeY=y;dot._x=x;dot._y=y;dot._vx=(Math.random()-0.5)*0.02;dot._vy=(Math.random()-0.5)*0.02;dot._seed=Math.random()*Math.PI*2;dot.style.left=`${x}%`;dot.style.top=`${y}%`;dot.style.width=`${size}px`;dot.style.height=`${size}px`;dot.style.opacity=0.6+Math.random()*0.35;container.append(dot);dots.push(dot);}return dots;};
+const bgDots=initBackgroundDots();
+let mouse={x:-9999,y:-9999};
+window.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;});
+let lastDotFrame=performance.now();
+const animateBackgroundDots=()=>{const now=performance.now();const dt=Math.min((now-lastDotFrame)/16.6667,2);lastDotFrame=now;const w=window.innerWidth;const h=window.innerHeight;const time=now*0.001;bgDots.forEach((dot,index)=>{let x=dot._x;let y=dot._y;let vx=dot._vx;let vy=dot._vy;const screenX=x/100*w;const screenY=y/100*h;const dx=mouse.x-screenX;const dy=mouse.y-screenY;const dist=Math.hypot(dx,dy);const homeSpring=0.0025;const mouseRadius=260;const mousePull=dist<mouseRadius?(1-dist/mouseRadius)*0.0045:0;vx += (dot._homeX-x)*homeSpring*dt;vy += (dot._homeY-y)*homeSpring*dt;if(mousePull){const angle=Math.atan2(dy,dx);vx += Math.cos(angle)*mousePull*dt;vy += Math.sin(angle)*mousePull*dt;}const driftX=Math.sin(time*0.35+dot._seed+index*0.015)*0.0012;const driftY=Math.cos(time*0.3+dot._seed*1.3+index*0.01)*0.0012;vx += driftX*dt;vy += driftY*dt;const damping=Math.pow(0.97,dt);vx *= damping;vy *= damping;x += vx*dt;y += vy*dt;if(x<0){x=0;vx=Math.abs(vx)*0.72;}else if(x>100){x=100;vx=-Math.abs(vx)*0.72;}if(y<0){y=0;vy=Math.abs(vy)*0.72;}else if(y>100){y=100;vy=-Math.abs(vy)*0.72;}dot._x=x;dot._y=y;dot._vx=vx;dot._vy=vy;dot.style.transform=`translate3d(${(x-dot._homeX)/100*w}px, ${(y-dot._homeY)/100*h}px, 0)`;});requestAnimationFrame(animateBackgroundDots);};
+requestAnimationFrame(animateBackgroundDots);
 const toast=(message)=>{let host=document.querySelector('#toast');if(!host){host=document.createElement('div');host.id='toast';host.className='toast-container';document.body.append(host);}const note=document.createElement('div');note.className='toast';note.textContent=message;host.append(note);note.addEventListener('animationend',()=>note.remove());};
 const add=(id,qty=1)=>{const p=products.find(x=>x.id==id);if(!p)return;const amount=Math.max(0,Math.floor(qty));if(amount<1){toast('Select at least 1 item before adding.');qtyState[id]=1;if(page==='products')renderProducts();return;}const i=cart.find(x=>x.id==id);if(i)i.q+=amount;else cart.push({...p,q:amount});save();setCount();toast(`Added ${amount}× ${p.n} to cart`);qtyState[id]=1;if(page==='products')renderProducts();if(page==='cart')renderCart();};
 const mod=(id,d)=>{const i=cart.find(x=>x.id==id);if(!i)return; i.q+=d;for(let j=cart.length-1;j>=0;j--)if(cart[j].q<1)cart.splice(j,1);save();setCount();if(page==='products')renderProducts();if(page==='cart')renderCart();};
@@ -51,8 +59,12 @@ const q=(document.querySelector('#q')?.value||'').trim().toLowerCase();
 const list=products.filter(p=>(cat==='All'||p.c===cat)&&(p.n+p.c+p.t).toLowerCase().includes(q));
 const grouped={};
 list.forEach(p=>{if(!grouped[p.c])grouped[p.c]=[];grouped[p.c].push(p);});
-const catOrder=Object.keys(grouped);
-document.querySelector('#grid').innerHTML=catOrder.map(c=>`<div class="category-section"><div class="category-header"><h2>${c}</h2><div class="category-bar"></div></div><div class="category-grid">${grouped[c].map(p=>`<article class="card${p.c==='Cosmetics'?' cosmetics-card':''}">${p.img?`<img src="${p.img}" alt="${p.n}" class="card-img" onerror="this.remove()">`:''}<h3>${p.n}</h3><p class="desc">${p.t}</p>${p.note!==false?`<p class="card-note">${imageNoteText}</p>`:''}<div class="row"><strong class="price">${money(p.p)}</strong></div><div class="card-actions"><div class="qty-group"><button class="ghost" data-qty-dec="${p.id}">-</button><span class="qty-display" data-qty-value="${p.id}">${qtyState[p.id]||1}</span><button class="ghost" data-qty-inc="${p.id}">+</button></div><button class="primary" data-add="${p.id}">Add to Cart</button></div></article>`).join('')}</div></div>`).join('')||'<div class="empty">No results</div>';
+const catOrder=Object.keys(grouped).sort((a,b)=>{const pa=categoryPriority[a]??99;const pb=categoryPriority[b]??99;return pa!==pb?pa-pb:a.localeCompare(b);});
+const grid=document.querySelector('#grid');
+grid.style.opacity='0';
+grid.style.transform='translateY(12px)';
+grid.innerHTML=catOrder.map(c=>`<div class="category-section"><div class="category-header"><h2>${c}</h2><div class="category-bar"></div></div><div class="category-grid">${grouped[c].map(p=>`<article class="card${p.c==='Cosmetics'?' cosmetics-card':''}">${p.img?`<img src="${p.img}" alt="${p.n}" class="card-img" onerror="this.remove()">`:''}<h3>${p.n}</h3><p class="desc">${p.t}</p>${p.note!==false?`<p class="card-note">${imageNoteText}</p>`:''}<div class="row"><strong class="price">${money(p.p)}</strong></div><div class="card-actions"><div class="qty-group"><button class="ghost" data-qty-dec="${p.id}">-</button><span class="qty-display" data-qty-value="${p.id}">${qtyState[p.id]||1}</span><button class="ghost" data-qty-inc="${p.id}">+</button></div><button class="primary" data-add="${p.id}">Add to Cart</button></div></article>`).join('')}</div></div>`).join('')||'<div class="empty">No results</div>';
+requestAnimationFrame(()=>{grid.style.opacity='1';grid.style.transform='translateY(0)';});
 }
 function renderCart(){
 const host=document.querySelector('#cartItems');if(!host)return;

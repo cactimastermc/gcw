@@ -17,8 +17,23 @@
   --shadow: 0 8px 18px #00000040;
 }
 
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--brown);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--brown-light);
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--orange);
+}
+
 * {
   box-sizing: border-box;
+  -webkit-user-drag: none;
 }
 
 html, body {
@@ -33,20 +48,34 @@ body {
   font: 14px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   color: var(--text);
   position: relative;
+  -webkit-user-select: none;
+  user-select: none;
   background-image:
     radial-gradient(circle at 20% 15%, rgba(255, 206, 153, 0.28), transparent 20%),
     radial-gradient(circle at 80% 18%, rgba(255, 170, 95, 0.22), transparent 14%),
     radial-gradient(circle at 50% 90%, rgba(255, 190, 115, 0.16), transparent 18%),
-    radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.95) 1px, transparent 1px),
-    radial-gradient(circle, rgba(255,255,255,0.82) 0%, rgba(255,255,255,0.82) 1px, transparent 1px),
-    radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.9) 1px, transparent 1px),
-    radial-gradient(circle, rgba(255,255,255,0.78) 0%, rgba(255,255,255,0.78) 1px, transparent 1px),
     linear-gradient(180deg, #2c0c57 0%, #6a2c9d 30%, #be5fa4 55%, #eb8554 82%, #ffc577 100%);
-  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat, repeat, repeat, no-repeat;
-  background-size: auto, auto, auto, 140px 140px, 80px 80px, 180px 180px, 120px 120px, cover;
-  background-position: center center, center center, center center, 5% 12%, 55% 18%, 80% 42%, 30% 70%, center center;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+  background-size: auto, auto, auto, cover;
+  background-position: center center, center center, center center, center center;
   background-attachment: fixed;
   overflow-x: hidden;
+}
+
+#bgDots {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.bg-dot {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.85);
+  mix-blend-mode: screen;
+  filter: blur(0.5px);
+  will-change: transform, opacity;
 }
 
 a {
@@ -75,6 +104,32 @@ main {
   padding: 24px 0 12px;
 }
 
+.header-start {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  color: #ffffff;
+  background: var(--card);
+  text-decoration: none;
+  font-size: 18px;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.back-link:hover {
+  background: rgba(255,255,255,0.1);
+  transform: translateX(-1px);
+}
+
 .eyebrow, .meta {
   margin: 0;
   color: var(--muted);
@@ -87,11 +142,37 @@ h1, h2, p {
   margin: 0;
 }
 
+h1 {
+  font-size: 26px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ffc577, var(--orange-hot), #ffc577);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0px 4px 20px rgba(219, 127, 75, 0.4);
+  letter-spacing: -0.5px;
+  animation: shine 4s linear infinite;
+}
+
+@keyframes shine {
+  to { background-position: 200% center; }
+}
+
 .btn, input, .card, .panel {
   border: 1px solid var(--line);
-  background: var(--card);
+  background: rgba(36, 36, 36, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   box-shadow: var(--shadow);
   border-radius: 16px;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 32px rgba(0,0,0,0.5);
+  border-color: var(--orange);
 }
 
 .panel {
@@ -153,7 +234,18 @@ h1, h2, p {
 input {
   width: 100%;
   outline: 0;
-  color: var(--cream);
+  color: var(--text);
+  padding: 14px 18px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+input:focus {
+  border-color: var(--orange);
+  background: rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 0 4px rgba(219, 127, 75, 0.2);
 }
 
 .cats {
@@ -168,6 +260,32 @@ input {
   color: var(--cream);
   padding: 9px 12px;
   border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+
+.chip:hover {
+  background: rgba(219, 127, 75, 0.16);
+  color: var(--cream);
+  transform: translateY(-1px);
+}
+
+.chip.on {
+  background: var(--orange);
+  border-color: var(--orange-hot);
+  color: var(--card);
+  animation: chipSlideUp 0.24s ease-out forwards;
+}
+
+@keyframes chipSlideUp {
+  0% {
+    transform: translateY(8px);
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+  100% {
+    transform: translateY(0);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  }
 }
 
 .grid {
@@ -175,6 +293,7 @@ input {
   grid-template-columns: 1fr;
   gap: 28px;
   width: 100%;
+  transition: opacity 0.24s ease, transform 0.24s ease;
 }
 
 .category-section {
@@ -187,6 +306,17 @@ input {
   align-items: center;
   gap: 14px;
   padding: 8px 0;
+}
+
+@keyframes sectionSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .category-header h2 {
@@ -429,9 +559,10 @@ input {
 
 .empty {
   padding: 18px;
-  border: 1px dashed var(--line);
+  border: 1px dashed rgba(255, 255, 255, 0.35);
   border-radius: 16px;
-  color: var(--cream-dark);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--cream);
   text-align: center;
 }
 
