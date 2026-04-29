@@ -40,9 +40,11 @@ const save=()=>localStorage.setItem('cart',JSON.stringify(cart));
 const total=()=>cart.reduce((a,i)=>a+i.p*i.q,0);
 const count=()=>cart.reduce((a,i)=>a+i.q,0);
 const cats=['All',...new Set(products.map(p=>p.c))];
+const qtyState=Object.fromEntries(products.map(p=>[p.id,1]));
 const setCount=()=>{const el=document.querySelector('#cartCount');if(el)el.textContent=count();};
-const add=id=>{const p=products.find(x=>x.id==id),i=cart.find(x=>x.id==id);i?i.q++:cart.push({...p,q:1});save();setCount();renderCart();};
-const mod=(id,d)=>{const i=cart.find(x=>x.id==id);if(!i)return;i.q+=d;for(let j=cart.length-1;j>=0;j--)if(cart[j].q<1)cart.splice(j,1);save();setCount();renderCart();};
+const toast=(message)=>{let host=document.querySelector('#toast');if(!host){host=document.createElement('div');host.id='toast';host.className='toast-container';document.body.append(host);}const note=document.createElement('div');note.className='toast';note.textContent=message;host.append(note);note.addEventListener('animationend',()=>note.remove());};
+const add=(id,qty=1)=>{const p=products.find(x=>x.id==id);if(!p)return;const amount=Math.max(0,Math.floor(qty));if(amount<1){toast('Select at least 1 item before adding.');qtyState[id]=1;if(page==='products')renderProducts();return;}const i=cart.find(x=>x.id==id);if(i)i.q+=amount;else cart.push({...p,q:amount});save();setCount();toast(`Added ${amount}× ${p.n} to cart`);qtyState[id]=1;if(page==='products')renderProducts();if(page==='cart')renderCart();};
+const mod=(id,d)=>{const i=cart.find(x=>x.id==id);if(!i)return; i.q+=d;for(let j=cart.length-1;j>=0;j--)if(cart[j].q<1)cart.splice(j,1);save();setCount();if(page==='products')renderProducts();if(page==='cart')renderCart();};
 const del=id=>{const i=cart.findIndex(x=>x.id==id);if(i>-1)cart.splice(i,1);save();setCount();renderCart();};
 function renderProducts(){
 const q=(document.querySelector('#q')?.value||'').trim().toLowerCase();
@@ -50,7 +52,7 @@ const list=products.filter(p=>(cat==='All'||p.c===cat)&&(p.n+p.c+p.t).toLowerCas
 const grouped={};
 list.forEach(p=>{if(!grouped[p.c])grouped[p.c]=[];grouped[p.c].push(p);});
 const catOrder=Object.keys(grouped);
-document.querySelector('#grid').innerHTML=catOrder.map(c=>`<div class="category-section"><div class="category-header"><h2>${c}</h2><div class="category-bar"></div></div><div class="category-grid">${grouped[c].map(p=>`<article class="card${p.c==='Cosmetics'?' cosmetics-card':''}">${p.img?`<img src="${p.img}" alt="${p.n}" class="card-img" onerror="this.remove()">`:''}<h3>${p.n}</h3><p class="desc">${p.t}</p>${p.note!==false?`<p class="card-note">${imageNoteText}</p>`:''}<div class="row"><strong class="price">${money(p.p)}</strong></div><button class="primary" data-add="${p.id}">Add to Cart</button></article>`).join('')}</div></div>`).join('')||'<div class="empty">No results</div>';
+document.querySelector('#grid').innerHTML=catOrder.map(c=>`<div class="category-section"><div class="category-header"><h2>${c}</h2><div class="category-bar"></div></div><div class="category-grid">${grouped[c].map(p=>`<article class="card${p.c==='Cosmetics'?' cosmetics-card':''}">${p.img?`<img src="${p.img}" alt="${p.n}" class="card-img" onerror="this.remove()">`:''}<h3>${p.n}</h3><p class="desc">${p.t}</p>${p.note!==false?`<p class="card-note">${imageNoteText}</p>`:''}<div class="row"><strong class="price">${money(p.p)}</strong></div><div class="card-actions"><div class="qty-group"><button class="ghost" data-qty-dec="${p.id}">-</button><span class="qty-display" data-qty-value="${p.id}">${qtyState[p.id]||1}</span><button class="ghost" data-qty-inc="${p.id}">+</button></div><button class="primary" data-add="${p.id}">Add to Cart</button></div></article>`).join('')}</div></div>`).join('')||'<div class="empty">No results</div>';
 }
 function renderCart(){
 const host=document.querySelector('#cartItems');if(!host)return;
@@ -61,7 +63,13 @@ if(page==='products'){
 document.querySelector('#cats').innerHTML=cats.map(c=>`<button class="chip${c==='All'?' on':''}" data-cat="${c}">${c}</button>`).join('');
 document.querySelector('#q').addEventListener('input',renderProducts);
 document.querySelector('#cats').addEventListener('click',e=>{if(!e.target.dataset.cat)return;cat=e.target.dataset.cat;document.querySelectorAll('.chip').forEach(b=>b.classList.toggle('on',b.dataset.cat===cat));renderProducts();});
-document.querySelector('#grid').addEventListener('click',e=>e.target.dataset.add&&add(e.target.dataset.add));
+document.querySelector('#grid').addEventListener('click',e=>{
+  if(e.target.dataset.add) add(e.target.dataset.add, qtyState[e.target.dataset.add]);
+  if(e.target.dataset.qtyInc){const id=e.target.dataset.qtyInc;qtyState[id]=Math.min(999,(qtyState[id]||1)+1);renderProducts();}
+  if(e.target.dataset.qtyDec){const id=e.target.dataset.qtyDec;qtyState[id]=Math.max(0,(qtyState[id]||1)-1);renderProducts();}
+  if(e.target.dataset.inc) mod(e.target.dataset.inc,1);
+  if(e.target.dataset.dec) mod(e.target.dataset.dec,-1);
+});
 setCount();renderProducts();
 }
 if(page==='cart'){
