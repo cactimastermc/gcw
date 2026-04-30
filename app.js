@@ -1,10 +1,18 @@
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('mousedown', e => { if (e.button === 2) e.preventDefault(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key)) || (e.ctrlKey && e.key === 'U')) {
+    e.preventDefault();
+  }
+});
+
 const products=[
 {id:27,n:'Copper Cape',c:'Capes',p:0.15,t:'Minecraft Copper Cape',note:true,img:'public/images/coppercape.png'},
 {id:28,n:'Home Cape',c:'Capes',p:0.20,t:'Minecraft Home Cape',note:true,img:'public/images/homecape.png'},
 {id:29,n:'Menace Cape',c:'Capes',p:0.40,t:'Minecraft Menace Cape',note:true,img:'public/images/menacecape.png'},
 {id:30,n:'Purple Heart Cape',c:'Capes',p:3.10,t:'Minecraft Purple Heart Cape',note:true,f:1,img:'public/images/purpleheartcape.png'},
 {id:31,n:'Optifine Cape',c:'Capes',p:0.40,t:'Minecraft Optifine Cape',note:true,img:'public/images/optifinecape.webp'},
-{id:24,n:'Minecraft Full Access Account',c:'Games',p:7.90,t:'MCFA Access',note:true,img:'public/images/mcfa.webp'},
+{id:24,n:'Minecraft Full Access Account',c:'Games',p:6,t:'MCFA Access',note:true,img:'public/images/mcfa.webp'},
 {id:25,n:'Minecraft Legends',c:'Games',p:1.70,t:'Minecraft Legends',note:true,img:'public/images/mclegends.jpg'},
 {id:26,n:'Minecraft Dungeons',c:'Games',p:11.50,t:'Minecraft Dungeons Game',note:true,img:'public/images/mcdungeons.jpg'},
 {id:1,n:'NethPVP Kit',c:'2b2t Gear',p:1.35,t:'2B2T Netherite PVP Kit',note:true,img:'public/images/nethpvpkit.png'},
@@ -29,7 +37,7 @@ const products=[
 {id:20,n:'Crunchyroll 1m',c:'Entertainment',p:0.60,t:'Crunchyroll 1 Month',note:true,img:'public/images/crunchyroll.png'},
 {id:21,n:'Amazon Prime 1m',c:'Entertainment',p:1.00,t:'Amazon Prime 1 Month',note:true,img:'public/images/amazonprime.webp'},
 {id:22,n:'Amazon Prime 6m',c:'Entertainment',p:2.00,t:'Amazon Prime 6 Months',note:true,img:'public/images/amazonprime.webp'},
-{id:23,n:'JioHotstar Super',c:'Entertainment',p:0.99,t:'JioHotstar Super Access',note:true,img:'public/images/jiohotstar.png'}
+{id:23,n:'JioHotstar Super',c:'Entertainment',p:0.99,t:'JioHotstar Super Access',note:true,img:'public/images/disneyhotstar.jpg'}
 ];
 const page=document.body.dataset.page;
 const cart=JSON.parse(localStorage.getItem('cart')||'[]');
@@ -43,7 +51,7 @@ const categoryPriority={Capes:0,Games:1,Ranks:2,Hosting:3,Entertainment:99};
 const cats=['All',...Array.from(new Set(products.map(p=>p.c))).sort((a,b)=>{const pa=categoryPriority[a]??99;const pb=categoryPriority[b]??99;return pa!==pb?pa-pb:a.localeCompare(b);})];
 const qtyState=Object.fromEntries(products.map(p=>[p.id,1]));
 const setCount=()=>{const el=document.querySelector('#cartCount');if(el)el.textContent=count();};
-const initBackgroundDots=()=>{const count=500;const container=document.createElement('div');container.id='bgDots';document.body.append(container);const dots=[];for(let i=0;i<count;i++){const dot=document.createElement('div');dot.className='bg-dot';const x=Math.random()*100;const y=Math.random()*100;const size=1.5+Math.random()*3;dot.dataset.x=x;dot.dataset.y=y;dot._homeX=x;dot._homeY=y;dot._x=x;dot._y=y;dot._vx=(Math.random()-0.5)*0.02;dot._vy=(Math.random()-0.5)*0.02;dot._seed=Math.random()*Math.PI*2;dot.style.left=`${x}%`;dot.style.top=`${y}%`;dot.style.width=`${size}px`;dot.style.height=`${size}px`;dot.style.opacity=0.6+Math.random()*0.35;container.append(dot);dots.push(dot);}return dots;};
+const initBackgroundDots=()=>{const count=window.innerWidth<768?75:250;const container=document.createElement('div');container.id='bgDots';document.body.append(container);const dots=[];for(let i=0;i<count;i++){const dot=document.createElement('div');dot.className='bg-dot';const x=Math.random()*100;const y=Math.random()*100;const size=1.5+Math.random()*3;dot.dataset.x=x;dot.dataset.y=y;dot._homeX=x;dot._homeY=y;dot._x=x;dot._y=y;dot._vx=(Math.random()-0.5)*0.02;dot._vy=(Math.random()-0.5)*0.02;dot._seed=Math.random()*Math.PI*2;dot.style.left=`${x}%`;dot.style.top=`${y}%`;dot.style.width=`${size}px`;dot.style.height=`${size}px`;dot.style.opacity=0.6+Math.random()*0.35;container.append(dot);dots.push(dot);}return dots;};
 const bgDots=initBackgroundDots();
 let mouse={x:-9999,y:-9999};
 window.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;});
