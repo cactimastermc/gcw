@@ -125,5 +125,45 @@ setCount();renderProducts();
 if(page==='cart'){
 renderCart();setCount();
 document.querySelector('#cartItems').addEventListener('click',e=>{const d=e.target.dataset;if(d.inc)mod(d.inc,1);if(d.dec)mod(d.dec,-1);if(d.del)del(d.del);});
-document.querySelector('#checkout').addEventListener('click',()=>{if(!cart.length)return;alert('Checkout not connected.');cart.length=0;save();setCount();renderCart();});
+document.querySelector('#checkout').addEventListener('click', async () => {
+  if (!cart.length) return;
+  const name = prompt("Please enter your name for the order checkout:");
+  if (!name) return;
+  const email = prompt("Please enter your email address to receive your order:");
+  if (!email) return;
+
+  const originalText = document.querySelector('#checkout').textContent;
+  document.querySelector('#checkout').textContent = 'Processing...';
+
+  try {
+    const res = await fetch('http://localhost:3000/api/tickets/create', { // Use your Vercel domain later, e.g. https://your-ticket-system.vercel.app/api/tickets/create
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name,
+        email,
+        subject: `New Order from ${name} - Garfield's Store`,
+        message: 'I would like to purchase the following items:',
+        cart: cart // The API route will format the products automatically!
+      })
+    });
+
+    const data = await res.json();
+    document.querySelector('#checkout').textContent = originalText;
+    
+    if (data.error) {
+      alert('Error creating order ticket: ' + data.error);
+    } else {
+      alert('Order placed successfully! Your ticket ID is ' + data.id);
+      // Optional: window.location.href = `http://localhost:3000${data.ticketUrl}`;
+      cart.length = 0;
+      save();
+      setCount();
+      renderCart();
+    }
+  } catch (err) {
+    alert('Network error. Make sure the ticket system API is running.');
+    document.querySelector('#checkout').textContent = originalText;
+  }
+});
 }
